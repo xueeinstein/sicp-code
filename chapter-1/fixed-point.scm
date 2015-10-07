@@ -32,3 +32,21 @@
                             (/ x y)))
                 1.0 ; first-guess
                 ))
+
+;; A Higher level fixed point abstraction
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+
+(define (sqrt-me-v2 x)
+  ; average-damp
+  (define (average-damp f)
+    (define (average a b)
+      (/ (+ a b) 2.0))
+
+    ; return procedure
+    (lambda (x) (average x (f x))))
+
+  (fixed-point-of-transform
+    (lambda (y) (/ x y))
+    average-damp
+    1.0))
