@@ -118,7 +118,8 @@
   ((get 'make-from-mag-ang 'polar) r a))
 
 ;; Attention: after using Data-directed Programming,
-;; all above procedures don't need to change!
+;; all above procedures don't need to change when add
+;; new types, this feature is called additive
 
 (install-rectangular-package)
 (install-polar-package)
