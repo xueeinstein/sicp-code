@@ -18,7 +18,7 @@
                   (cdr record)
                   #f))
             (begin
-              (display "here@")
+              (display ">>>get")
               (newline)
               (display key-1)
               (newline)

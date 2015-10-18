@@ -38,6 +38,10 @@
 (define (=zero? x)
   (apply-generic '=zero? x))
 
+(define (exp x y)
+  ; new operation for coercion test
+  (apply-generic 'exp x y))
+
 ;; normal computations
 (define (install-scheme-number-package)
   ; internal procedures
@@ -60,6 +64,11 @@
   (put 'div
        '(scheme-number scheme-number)
        (lambda (x y) (tag (/ x y))))
+
+  (put 'exp
+       '(scheme-number scheme-number)
+        ; new operation for coercion test
+       (lambda (x y) (tag (expt x y))))
 
   (put 'make 'scheme-number
        (lambda (x) (tag x)))
@@ -292,15 +301,15 @@
          (error "Bad tagged datum -- CONTENTS" datum))))
 
 (define (apply-generic op . args)
-  ;(begin
-    ;(display "here@@@@@")
+  (begin
+    (display "here@@@@")
+    (newline)
+    (display op)
     ;(newline)
-    ;(display op)
-    ;;(newline)
-    ;;(display (car args))
-    ;(newline)
-    ;(display args)
-    ;(newline))
+    ;(display (car args))
+    (newline)
+    (display args)
+    (newline))
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))  ; get specified procedure
       (if proc
