@@ -159,49 +159,85 @@
          (count-pairs (cdr x))
          1)))
 
-(count-pairs (cons (cons 1 2) (cons 3 4)))  ; get 3 pairs
-(count-pairs '((a b) c)) ; get 4
-(count-pairs '(((a) (b)) (c))) ; get 7
-; 7 pair model:
-; (total 7 box)
-;              +--+--+                +--+--+
-; pair-7  +---->  |  +---------------->  |  |
-;              ++-+--+                +-++--+
-;               |                       |
-;               |                       |
-;              +v-+--+   +--+--+      +-v+--+
-;              |  |  +--->  |  |      |  |  |
-;              ++-+--+   ++-+--+      +-++--+
-;               |         |             |
-;               |         |             v
-;              +v-+--+   +v-+--+        c
-;              |  |  |   |  |  |
-;              ++-+--+   ++-+--+
-;               |         |
-;               v         v
-;               a         b
+(define three (cons (cons 1 2) (cons 3 4)))
+(count-pairs three) ; get 3 pairs
+; the model of three:
+;       +--+--+    +--+--+
+; three->  |  +---->  |  |
+;       +-++--+    +-++-++
+;         |          |  |
+;         |          v  v
+;       +-v+--+      3  4
+;       |  |  |
+;       +-++-++
+;         |  |
+;         v  v
+;         1  2
 
+(define two (list 1 2))
+(define four (cons two (cdr two)))
+(count-pairs four)  ; get 4 pairs
+; the model of four:
+;
+;          +--+--+
+; four +--->  |  |
+;          ++-+--+------+
+;           |           |
+;           |           |
+;          +v-+--+     +v-+--+
+;  two +--->  |  +----->  |  |
+;          ++-+--+     ++-+--+
+;           |           |
+;           v           v
+;           1           2
+
+(define a (cons 1 2))
+(define b (cons a a))
+(define seven (cons b b))
+(count-pairs seven) ; get 7 pairs
+; the model of seven:
+;          +----+-----+
+;          |    |     |
+; seven +-->    |     |
+;          +-+--+--+--+
+;            |     |
+;            | +---+
+;            | |
+;          +-v-v+-----+
+;          |    |     |
+;    b +--->    |     |
+;          +-+--+--+--+
+;            |     |
+;            | +---+
+;            | |
+;          +-v-v+-----+
+;          |    |     |
+;    a +--->    |     |
+;          +-+--+--+--+
+;            |     |
+;            v     v
+;            1     2
 
 ;; Exercise 3.17
-;; here, we use binary tree to record traced boxes
+
+(define already-seen '())
 (define (count-pairs-me x)
-  (define records (list #f))
 
-  (define (add-one i)
-    (if i 0 1))
+  (define (seen? x)
+    (seen-iter x already-seen))
 
-  (define (traverse x trace)
-    (let ((is-traced (car trace)))
-      (begin
-        ; mark current box traced
-        (set-car! trace #t)
-        ; mark car and cdr box untraced
-        (set-cdr! trace '((#f) (#f)))
-        (if (not (pair? x))
-            0
-            (+ (traverse (car x) (cadr trace))
-               (traverse (cdr x) (caddr trace))
-               (add-one is-traced))))))
+  (define (seen-iter x seens)
+    (if (null? seens)
+        #f
+        (or (eq? x (car seens))
+            (seen-iter x (cdr seens)))))
 
-  (trace traverse)
-  (traverse x records))
+  (if (not (pair? x))
+      0
+      (if (seen? x)
+          0
+          (begin
+            (set! already-seen (cons x already-seen))
+            (+ (count-pairs-me (car x))
+               (count-pairs-me (cdr x))
+               1)))))
