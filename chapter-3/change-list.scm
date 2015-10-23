@@ -220,24 +220,13 @@
 
 ;; Exercise 3.17
 
-(define already-seen '())
 (define (count-pairs-me x)
+  (define (inner x memo-list)
+    (if (and (pair? x)
+             (not (memq x memo-list)))
+        (inner (car x)
+               (inner (cdr x)
+                      (cons x memo-list)))
+        memo-list))
 
-  (define (seen? x)
-    (seen-iter x already-seen))
-
-  (define (seen-iter x seens)
-    (if (null? seens)
-        #f
-        (or (eq? x (car seens))
-            (seen-iter x (cdr seens)))))
-
-  (if (not (pair? x))
-      0
-      (if (seen? x)
-          0
-          (begin
-            (set! already-seen (cons x already-seen))
-            (+ (count-pairs-me (car x))
-               (count-pairs-me (cdr x))
-               1)))))
+  (length (inner x '())))
