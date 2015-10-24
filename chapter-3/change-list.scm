@@ -230,3 +230,46 @@
         memo-list))
 
   (length (inner x '())))
+
+;; Exercise 3.18
+;; O(n)
+(define (check-cycle? x)
+  (define (iter current)
+    (cond ((null? current) #f)
+          ((not (pair? current)) #f)
+          ((eq? x current) #t)
+          (else
+           (iter (cdr current)))))
+
+  (if (null? x)
+      #f
+      (iter (cdr x))))
+
+;; Exercise 3.19
+;; In fact, my implementation in e-3.18 only cost O(1) mem
+
+;; Exercise 3.20
+(define (cons-me x y)
+  (define (set-x! v) (set! x v))
+  (define (set-y! v) (set! y v))
+  (define (dispatch m)
+    (cond ((eq? m 'car) x)
+          ((eq? m 'cdr) y)
+          ((eq? m 'set-car!) set-x!)
+          ((eq? m 'set-cdr!) set-y!)
+          (else
+           (error "Undefined operation -- CONS-ME" m))))
+  dispatch)
+
+(define (car-me z) (z 'car))
+(define (cdr-me z) (z 'cdr))
+
+(define (set-car-me! z new-value)
+  ((z 'set-car!) new-value)
+  z)
+
+(define (set-cdr-me! z new-value)
+  ((z 'set-cdr!) new-value)
+  z)
+
+; The environment model please check the pdf file

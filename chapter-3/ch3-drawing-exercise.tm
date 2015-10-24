@@ -313,6 +313,123 @@
   </session>
 
   The <em|acc2> doesn't share any procedures and variables with <em|acc>
+
+  \;
+
+  <with|font-series|bold|Exercise 3.20>
+
+  <\session|scheme|default>
+    <\input|Scheme] >
+      (define (cons x y)
+
+      \ \ (define (set-x! v) (set! x v))
+
+      \ \ (define (set-y! v) (set! y v))
+
+      \ \ (define (dispatch m)
+
+      \ \ \ \ (cond ((eq? m 'car) x)
+
+      \ \ \ \ \ \ \ \ \ \ ((eq? m 'cdr) y)
+
+      \ \ \ \ \ \ \ \ \ \ ((eq? m 'set-car!) set-x!)
+
+      \ \ \ \ \ \ \ \ \ \ ((eq? m 'set-cdr!) set-y!)
+
+      \ \ \ \ \ \ \ \ \ \ (else
+
+      \ \ \ \ \ \ \ \ \ \ \ \ (error "Undefined operation -- CONS" m))))
+
+      \ \ dispatch)
+    </input>
+
+    <\input|Scheme] >
+      (define (car z) (z 'car))
+    </input>
+
+    <\input|Scheme] >
+      (define (cdr z) (z 'cdr))
+    </input>
+
+    <\input|Scheme] >
+      (define (set-car! z new-value)
+
+      \ \ ((z 'set-car!) new-value)
+
+      \ \ z)
+    </input>
+
+    <\input|Scheme] >
+      (define (set-cdr! z new-value)
+
+      \ \ ((z 'set-cdr!) new-value)
+
+      \ \ z)
+    </input>
+
+    \;
+
+    Currently, the environment model is:
+
+    <with|gr-mode|<tuple|edit|text-at>|gr-frame|<tuple|scale|1cm|<tuple|0.5gw|0.430007gh>>|gr-geometry|<tuple|geometry|1par|0.6par>|gr-grid|<tuple|cartesian|<point|0|0>|1>|gr-grid-old|<tuple|cartesian|<point|0|0>|1>|gr-edit-grid-aspect|<tuple|<tuple|axes|none>|<tuple|1|none>|<tuple|10|none>>|gr-edit-grid|<tuple|cartesian|<point|0|0>|1>|gr-edit-grid-old|<tuple|cartesian|<point|0|0>|1>|<graphics||<cline|<point|-5|4>|<point|6.0|4.0>|<point|6.0|2.0>|<point|-5.0|2.0>>|<line|<point|-5.6|3>|<point|-7.0|3.0>>|<line|<point|-5.8|3.2>|<point|-5.6|3.0>|<point|-5.8|2.8>>|<text-at|Global
+    Env|<point|-7.3|3.3>>|<text-at|cons:|<point|-4.6|3>>|<text-at|car:|<point|-2.5|3>>|<text-at|cdr:|<point|-0.6|3>>|<text-at|set-car!:|<point|1.5|3>>|<text-at|set-cdr!:|<point|4|3>>|<carc|<point|-3.5|0>|<point|-4.0|0.0>|<point|-3.8|0.2>>|<carc|<point|-3|0>|<point|-3.5|0.0>|<point|-3.3|0.3>>|<point|-3.7|0>|<point|-3.2|0>|<line|<point|-3.71638|3.07592>|<point|-3.5|3.0>|<point|-3.5|0.3>>|<line|<point|-3.7|0.5>|<point|-3.5|0.3>|<point|-3.3|0.5>>|<line|<point|-3.2|0>|<point|-2.8|0.0>|<point|-2.8|2.0>>|<line|<point|-3|1.8>|<point|-2.8|2.0>|<point|-2.6|1.8>>|<line|<point|-3.7|0>|<point|-3.7|-1.0>>|<line|<point|-4|-0.8>|<point|-3.7|-1.0>|<point|-3.5|-0.7>>|<text-at|body:
+    (define (set-x!...|<point|-6.8|-1.7>>|<text-at|(define
+    (set-y!..|<point|-5.8193504728554|-2.2>>|<text-at|(define
+    (dispatch...|<point|-5.8|-2.7>>|<text-at|dispatch|<point|-5.7|-3.2>>|<text-at|arg:
+    x y|<point|-4.8|-1.31793226617277>>|<carc|<point|-1.5|0>|<point|-2.0|0.0>|<point|-1.73671953108274|0.2>>|<carc|<point|-1.5|0>|<point|-1.0|0.0>|<point|-1.2|0.3>>|<point|-1.8|0>|<point|-1.3|0>|<line|<point|-1.81327|3.07592>|<point|-1.5|3.0>|<point|-1.5|0.4>>|<line|<point|-1.7|0.5>|<point|-1.5|0.4>|<point|-1.4|0.5>>|<line|<point|-1.3|0>|<point|-0.8|0.0>|<point|-0.8|2.0>>|<line|<point|-1|1.8>|<point|-0.8|2.0>|<point|-0.6|1.8>>|<line|<point|-1.8|0>|<point|-1.8|-1.0>>|<line|<point|-2|-0.8>|<point|-1.8|-1.0>|<point|-1.5|-0.8>>|<text-at|arg:
+    z|<point|-2|-1.5>>|<text-at|body: (z 'car)|<point|-2.8|-2.0>>|<carc|<point|0.5|0>|<point|0.0|0.0>|<point|0.3|-0.3>>|<carc|<point|0.5|0>|<point|1.0|0.0>|<point|0.7|-0.3>>|<point|0.3|0>|<point|0.8|0>|<line|<point|0.106314|3.12148>|<point|0.5|3.0>|<point|0.5|0.3>>|<line|<point|0.3|0.5>|<point|0.5|0.3>|<point|0.7|0.5>>|<line|<point|0.8|0>|<point|1.2|0.0>|<point|1.2|2.0>>|<line|<point|1|1.8>|<point|1.2|2.0>|<point|1.4|1.8>>|<line|<point|0.3|0>|<point|0.3|-1.0>>|<line|<point|0.086357|-0.8>|<point|0.3|-1.0>|<point|0.4|-0.8>>|<text-at|body:
+    (z 'cdr)|<point|-0.3|-2.0>>|<text-at|arg:
+    z|<point|0.0|-1.5>>||<carc|<point|2.6|0>|<point|3.0|0.0>|<point|2.7|0.2>>|<carc|<point|3.4|0>|<point|3.0|0.0>|<point|3.2|0.3>>|<point|2.8|0>|<point|3.2|0>|<line|<point|2.83526|3.12148>|<point|3.0|3.0>|<point|3.0|0.4>>|<line|<point|2.8|0.6>|<point|3.0|0.4>|<point|3.2|0.5>>|<line|<point|3.2|0>|<point|3.6|0.0>|<point|3.6|2.0>>|<line|<point|3.4|1.8>|<point|3.6|2.0>>|<line|<point|3.7|1.8>|<point|3.6|2.0>>|<line|<point|2.8|0>|<point|2.8|-1.0>>|<line|<point|2.6|-0.8>|<point|2.8|-1.0>|<point|3.0|-0.7>>|<text-at|arg:
+    z v|<point|2.1824315385633|-1.41792895885699>>|<text-at|body: ((z
+    'set-car!) v)|<point|1.94438748511708|-1.91182696123826>>|<text-at|z|<point|3|-2.4>>|<carc|<point|5.5|0>|<point|5.0|0.0>|<point|5.3|0.3>>|<carc|<point|6|0>|<point|5.5|0.0>|<point|5.7|0.3>>|<point|5.8|0>|<line|<point|5.35486|3.12148>|<point|5.5|3.0>|<point|5.5|0.4>>|<line|<point|5.3|0.6>|<point|5.5|0.4>|<point|5.7|0.6>>|<line|<point|5.8|0>|<point|5.8|2.0>>|<line|<point|5.7|1.8>|<point|5.8|2.0>|<point|6.0|1.7>>|<point|5.3|0.0>|<line|<point|5.3|0>|<point|5.3|-1.0>>|<line|<point|5.0|-0.8>|<point|5.3|-1.0>|<point|5.5|-0.7>>|<text-at|arg:
+    z v|<point|5.5|-1.3>>|<text-at|body: ((z
+    ...|<point|5.39572033337743|-1.82365392247652>>|>>
+
+    \;
+
+    <\input|Scheme] >
+      (define x (cons 1 2))
+    </input>
+
+    <\input|Scheme] >
+      (define z (cons x x))
+    </input>
+
+    <\unfolded-io|Scheme] >
+      (set-car! (cdr z) 17)
+    <|unfolded-io>
+      #\<less\>procedure x (m)\<gtr\>
+    </unfolded-io>
+
+    <\unfolded-io|Scheme] >
+      (car x)
+    <|unfolded-io>
+      17
+    </unfolded-io>
+  </session>
+
+  <with|gr-mode|<tuple|edit|text-at>|gr-frame|<tuple|scale|1cm|<tuple|0.5gw|0.5gh>>|gr-geometry|<tuple|geometry|1par|0.6par>|gr-grid|<tuple|cartesian|<point|0|0>|1>|gr-grid-old|<tuple|cartesian|<point|0|0>|1>|gr-edit-grid-aspect|<tuple|<tuple|axes|none>|<tuple|1|none>|<tuple|10|none>>|gr-edit-grid|<tuple|cartesian|<point|0|0>|1>|gr-edit-grid-old|<tuple|cartesian|<point|0|0>|1>|<graphics||<cline|<point|-5.5|4>|<point|6.0|4.0>|<point|6.0|3.0>|<point|-5.5|3.0>>|<text-at|Global
+  Env|<point|-7.4|4.0>>|<text-at|x: 17|<point|-3.6|1.6>>|<text-at|y:
+  2|<point|-3.6|1>>|<text-at|set-x!|<point|-3.7|0.4>>|<cline|<point|-4|2>|<point|-2.0|2.0>|<point|-2.0|-1.0>|<point|-4.0|-1.0>>|<text-at|set-y!|<point|-3.6|0>>|<text-at|dispatch|<point|-3.7|-0.5>>|<text-at|E1|<point|-4|2.2>>|<line|<point|-3|3>|<point|-3.0|2.0>>|<line|<point|-3.2|2.8>|<point|-3.0|3.0>|<point|-2.71757176875248|2.68205119724831>>|<text-at|(cons
+  1 2)|<point|-2.8|2.2>>|<carc|<point|-5.5|1>|<point|-6.0|1.0>|<point|-5.7|1.3>>|<carc|<point|-5|1>|<point|-5.5|1.0>|<point|-5.18707463652328|1.2>>|<point|-5.7|1>|<point|-5.3|1>|<line|<point|-5.3|1>|<point|-4.0|1.0>>|<line|<point|-4.2|1.3>|<point|-4.0|1.0>|<point|-4.3|0.7>>|<text-at|x|<point|-5.2|3.4>>|<line|<point|-5.6|1.5>|<point|-5.5|1.3>|<point|-5.2|1.5>>|<line|<point|-5.10694205582749|3.28242823124752>|<point|-5.5|1.3>>|<line|<point|-5.7|1>|<point|-5.7|0.0>>|<line|<point|-5.5|0.3>|<point|-5.7|0.0>|<point|-6.0|0.2>>|<text-at|arg:
+  m|<point|-6.6|-0.5>>|<text-at|body: (cond
+  ...|<point|-7.0|-1.0>>|<text-at|cons:|<point|-4.0|3.4>>|<text-at|car:|<point|-2.3|3.4>>|<text-at|cdr:|<point|-0.8|3.4>>|<text-at|set-car!|<point|0.6|3.4>>|<text-at|set-cdr!|<point|2.4|3.4>>|<text-at|z|<point|4|3.4>>|<cline|<point|5|2>|<point|7.0|2.0>|<point|7.0|-1.0>|<point|5.0|-1.0>>|<text-at|x:
+  x|<point|5.3|1.4>>|<text-at|y: x|<point|5.3|1>>|<text-at|set-x!|<point|5.3|0.5>>|<text-at|set-y!|<point|5.4|0>>|<text-at|dispatch|<point|5.4|-0.6>>|<text-at|E2|<point|4.7|2.3>>|<text-at|(cons
+  x x)|<point|5.8|2.3>>|<line|<point|5.3|2>|<point|5.3|3.0>>|<line|<point|5.4|2.8>|<point|5.3|3.0>|<point|5.23389337213917|2.66050403492525>>|<carc|<point|3.5|1>|<point|3.0|1.0>|<point|3.2|1.3>>|<carc|<point|3.5|1>|<point|4.0|1.0>|<point|3.7|1.3>>|<point|3.7|1.0>|<line|<point|3.7|1>|<point|5.0|1.0>>|<line|<point|4.7|0.8>|<point|5.0|1.0>|<point|4.7|1.2>>|<line|<point|3.88244|3.28243>|<point|3.5|1.4>>|<line|<point|3.3|1.6>|<point|3.5|1.4>|<point|3.7|1.5>>|<point|3.2|1.0>|<line|<point|3.2|1>|<point|3.2|0.0>>|<line|<point|3|0.3>|<point|3.2|0.0>|<point|3.4|0.3>>|<text-at|arg:
+  m|<point|2.5|-0.4>>|<text-at|body: (cond
+  ...|<point|2.4|-1>>|<cline|<point|0|-1>|<point|2.0|-1.0>|<point|2.0|-2.0>|<point|0.0|-2.0>>|<text-at|z:
+  z|<point|0.4|-1.5>>|<line|<point|0.6|-1>|<point|0.6|3.0>>|<line|<point|0.4|2.8>|<point|0.6|3.0>|<point|0.8|2.8>>|<text-at|(cdr
+  z)|<point|0.8|-0.7>>|<text-at|E3|<point|0.0|-0.7>>|<line|<point|-2|-3>|<point|0.0|-3.0>|<point|0.0|-4.0>|<point|-2.0|-4.0>|<point|-2.0|-3.0>>|<text-at|v:
+  17|<point|-1.6|-3.5>>|<line|<point|-1|-3>|<point|-1.0|3.0>>|<line|<point|-0.8|2.8>|<point|-1.0|3.0>|<point|-1.15225228204789|2.5820545045641>>|<text-at|E4|<point|-2|-2.7>>>>
+
+  \;
+
+  How to handle the relationship between <em|E3> and <em|E4>? How to
+  represent temp var <em|(cdr z)>?
+
+  \;
+
+  \;
 </body>
 
 <\references>
