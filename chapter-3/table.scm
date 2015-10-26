@@ -312,9 +312,17 @@
   (caddr tree))
 
 (define (compare-key m)
+  (define (num-symbol->string key)
+    (cond ((number? key)
+           (number->string key))
+          ((symbol? key)
+           (symbol->string key))
+          (else
+            (error "Unknown key -- COMPARE-KEY" key))))
+
   (lambda (key-1 key-2)
-    (let ((str-1 (symbol->string key-1))
-          (str-2 (symbol->string key-2)))
+    (let ((str-1 (num-symbol->string key-1))
+          (str-2 (num-symbol->string key-2)))
       (cond ((eq? m '=) (string=? str-1 str-2))
             ((eq? m '<) (string<? str-1 str-2))
             ((eq? m '>) (string>? str-1 str-2))
