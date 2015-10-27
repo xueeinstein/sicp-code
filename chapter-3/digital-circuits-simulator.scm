@@ -24,10 +24,6 @@
       (display "@and@ new-value: ")
       (display new-value)
       (newline)
-      (display (get-signal a1))
-      (newline)
-      (display (get-signal a2))
-      (newline)
       (after-delay and-gate-delay
                    (lambda ()
                      (set-signal! output new-value)))))
@@ -254,11 +250,15 @@
 
 (define logical-or
   (lambda (x y)
-    (or x y)))
+    (if (> (+ x y) 0)
+        1
+        0)))
 
 (define logical-and
   (lambda (x y)
-    (and x y)))
+    (if (> (+ x y) 1)
+        1
+        0)))
 
 (define logical-not
   ; input 0, output 1
@@ -270,13 +270,13 @@
 (define and-gate-delay 3)
 (define or-gate-delay 5)
 
+; trace the procedures
 (trace add-to-agenda!)
 (trace after-delay)
 (trace or-gate)
 (trace and-gate)
 (trace inverter)
 (trace first-agenda-item)
-
 ;; test: probe the half-adder
 (define (probe name wire)
   (add-action!
@@ -287,7 +287,8 @@
       (display " ")
       (display (current-time the-agenda))
       (display " New-value = ")
-      (display (get-signal wire)))))
+      (display (get-signal wire))
+      (newline))))
 
 (define input-1 (make-wire))
 (define input-2 (make-wire))
@@ -301,4 +302,30 @@
 
 (set-signal! input-1 1)
 
-;(propagate)
+(propagate)
+; result:
+; sum 0 New-value = 0
+; carry 0 New-value = 0
+;
+; sum 8 New-value = 1
+
+(set-signal! input-2 1)
+
+(propagate)
+; result:
+; sum 8 New-value = 1
+; carry 11 New-value = 1
+
+
+;; Exercise 3.31
+;; if no init executation in 'accept-action-procedure!'
+;; we can only get:
+;; carry 11 New-value = 1
+
+;; Exercise 3.32
+;; (a1, a2), (0, 1) as input to an and-gate
+;;
+;; suppose the process is (0 1)->(1 1)->(1 0)
+;; Then the output-1 = 1, output-2 = 0
+;; If using queue, the final result is output-2, 0
+;; If using stack, the final result is output-1, 1, got error
