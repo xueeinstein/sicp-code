@@ -237,3 +237,112 @@
 (probe "Celsius temp" C)
 (probe "Fahrenheit temp" F)
 (set-value! C 25 'user)
+
+;;; ==========================
+;;; Exercises
+;;; ==========================
+
+;; Exercise 3.33
+;; averager
+;       +--------+      +--------+
+; c +---+ m1     |  y   |      a1+--+ a
+;       |    *  p+------+s  +    |
+;    +--+ m2     |      |      a2+--+ b
+;    |  +--------+      +--------+
+;    |
+;   x|
+;    |  +---+
+;    +--+ 2 |
+;       +---+
+
+(define (averager a b c)
+  (let ((x (make-connector))
+        (y (make-connector)))
+    (adder a b y)
+    (multiplier c x y)
+    (constant 2 x)
+    'ok))
+
+(define a (make-connector))
+(define b (make-connector))
+(define c (make-connector))
+(averager a b c)
+
+;; Exercise 3.34
+;; if given the value of b, you cannot get the value of a
+;; because get the value of a, require a's value too
+;; as multiplier constraint followed
+
+
+;; Exercise 3.35
+;; squarer
+(define (squarer a b)
+  (define (square i) (* i i))
+  (define (process-new-value)
+    (if (has-value? b)
+        (if (< (get-value b) 0)
+            (error "square less than 0 -- SQUARE"
+                   (get-value b))
+            (set-value! a
+                        (sqrt (get-value b))
+                        me))
+        (if (has-value? a)
+            (set-value! b
+                        (square (get-value a))
+                        me))))
+
+  (define (process-forget-value)
+    (forget-value! a me)
+    (forget-value! b me))
+
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+            (error "Unknown request -- SQUARER" request))))
+
+  (connect a me)
+  (connect b me)
+  me)
+
+;; Exercise 3.36
+;; ignore, draw env model again
+
+
+;; Exercise 3.37
+;; Simplified C-F Constraint
+
+(define (simplified-C-F-converter x)
+  ; F = 9/5 * C + 32
+  (c+ (c* (c/ (cv 9) (cv 5))
+          x)
+      (cv 32)))
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+
+(define (c/ x y)
+  (let ((z (make-connector)))
+    (multiplier y z x)
+    z))
+
+(define (cv x)
+  (let ((y (make-connector)))
+    (constant x y)
+    y))
+
+(define C-s (make-connector))
+(define F-s (simplified-C-F-converter C-s))
+
+; test:
+(set-value! C-s 25 'user)
+(get-value F-s) ; get 77
