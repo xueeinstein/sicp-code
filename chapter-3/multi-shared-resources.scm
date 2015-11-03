@@ -76,5 +76,5 @@
 ;; and the other in the dispatch function.
 ;;
 ;; According to the implementation of the serializer, if a
-;; process acquire mutex two times, the busy waiting will
+;; process acquires mutex two times, the busy waiting will
 ;; never halt.
