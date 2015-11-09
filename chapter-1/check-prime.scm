@@ -50,7 +50,7 @@
   (define (fermat-test)
     (define (try-it a)
       (= (expmod a n n) a))
-    (try-it (+ 1 (random-integer (- n 1)))))
+    (try-it (+ 1 (random (- n 1)))))
 
   ; fast prime checker
   (define (fast-prime? times)
@@ -96,7 +96,7 @@
   (define (Miller-Rabin-test)
     (define (try-it a)
       (= (expmod a (- n 1) n) 1))
-    (try-it (+ 1 (random-integer (- n 1)))))
+    (try-it (+ 1 (random (- n 1)))))
 
   ; fast prime checker
   (define (fast-prime? times)

@@ -46,8 +46,36 @@
 (define (stream-cdr stream)
   (forced (cdr stream)))
 
-(define (cons-stream a b)
-  (cons a (delayed b)))
+;; suppplementary procedures
+
+; delay and memo result
+(define (memo-proc proc)
+  (let ((already-run? #f)
+        (result #f))
+    (lambda ()
+      (if (not already-run?)
+          (begin
+            (set! result (proc))
+            (set! already-run? #t)
+            result)
+          result))))
+
+(define-syntax delayed
+  (syntax-rules ()
+    ((delayed exp)
+     (memo-proc (lambda () exp)))))
+
+(define (forced delayed-obj)
+  (delayed-obj))
+
+
+;; cons-stream must be special
+;; to avoid execute b straightforwardly
+;; comma operator means eval b firstly
+(define-syntax cons-stream
+  (syntax-rules (cons)
+    ((cons-stream a b)
+     (cons a (delayed b)))))
 
 (define (stream-enumerate-interval low high)
   (if (> low high)
@@ -66,28 +94,6 @@
         (else
           (stream-filter pred
                          (stream-cdr stream)))))
-
-;; suppplementary procedures
-(define (delayed p)
-  (lambda () p))
-
-(define (delay-v2 p)
-  (memo-proc (lambda () p)))
-
-(define (forced delayed-obj)
-  (delayed-obj))
-
-; delay and memo result
-(define (memo-proc proc)
-  (let ((already-run? #f)
-        (result #f))
-    (lambda ()
-      (if (not already-run?)
-          (begin
-            (set! result (proc))
-            (set! already-run? #t)
-            result)
-          result))))
 
 ;; test
 (load "../chapter-1/check-prime.scm")
