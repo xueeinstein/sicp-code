@@ -70,6 +70,19 @@
 
   (stream-for-each display-line s))
 
+(define (stream-head s n)
+  (define (iter s i)
+    (if (< i n)
+        (begin
+          (display (stream-car s))
+          (display " ")
+          (iter (stream-cdr s) (+ i 1)))))
+
+  (display "( ")
+  (iter s 0)
+  (display ")")
+  (newline))
+
 (define (stream-car stream)
   (car stream))
 
