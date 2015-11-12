@@ -318,3 +318,73 @@
 
 (define e72-stream
   (have-three-same-square-sum))
+
+;; streams as signals
+(define (integral integrand initial-value dt)
+  (define int
+    (cons-stream initial-value
+                 (add-streams (scale-stream integrand dt)
+                              int)))
+
+  int)
+
+;; Exercise 3.73
+;; RC circuit
+(define (RC r c dt)
+  (lambda (i v0)
+    (add-streams (scale-stream i r)
+                 (integral (scale-stream i (/ 1 c))
+                           v0
+                           dt))))
+
+;; Exercise 3.74
+;; zero crossing signal
+(define (sign-change-detector a b)
+  (define >  >=)  ; here, we treat 0 as positive num
+  (define (same-sign? a b)
+    (or (and (> a 0) (> b 0))
+        (and (< a 0) (< b 0))))
+  (cond ((same-sign? a b) 0)
+        ((and (> a 0) (< b 0)) -1)
+        ((and (< a 0) (> b 0)) 1)))
+
+(define (make-zero-crossings input-stream last-value)
+  (cons-stream
+    (sign-change-detector (stream-car input-stream)
+                          last-value)
+    (make-zero-crossings (stream-cdr input-stream)
+                         (stream-car input-stream))))
+
+; sense-data is the input signal
+(define sense-data (ln2-summands 1))
+(define zero-crossings
+  (make-zero-crossings sense-data 0))
+
+; Eva's code
+(define zero-crossings-eva
+  (stream-map-ext sign-change-detector
+                  sense-data
+                  (cons-stream 0
+                               sense-data)))
+
+;; Exercise 3.75
+; Louis's code
+(define (make-zero-crossings-louis
+          input-stream last-value last-avpt)
+  (let ((avpt (/ (+ (stream-car input-stream) last-value) 2)))
+    (cons-stream (sign-change-detector avpt last-avpt)
+                 (make-zero-crossings-louis
+                   (stream-cdr input-stream)
+                   (stream-car input-stream)
+                   avpt))))
+
+;; Exercise 3.76
+(define (smooth s)
+  (stream-map-ext (lambda (x1 x2) (/ (+ x1 x2) 2))
+              (cons-stream 0 s)
+              s))
+(define (make-zero-crossings-modular input-stream smooth)
+  (let ((after-smooth (smooth input-stream)))
+    (stream-map-ext sign-change-detector
+                    after-smooth
+                    (cons-stream 0 after-smooth))))
