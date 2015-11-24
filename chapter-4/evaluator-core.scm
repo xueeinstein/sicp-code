@@ -124,7 +124,7 @@
   (caddr exp))
 
 (define (definition? exp)
-  (tagged-list exp 'define))
+  (tagged-list? exp 'define))
 
 (define (definition-variable exp)
   (if (symbol? (cadr exp))
@@ -204,7 +204,7 @@
   (car exp))
 
 (define (operands exp)
-  (cadr exp))
+  (cdr exp))
 
 (define (no-operands? ops)
   (null? ops))
@@ -364,6 +364,10 @@
         (list 'cdr cdr)
         (list 'cons cons)
         (list 'null? null?)
+        (list '+ +)
+        (list '- -)
+        (list '* *)
+        (list '/ /)
         ; other scheme basic operations
   ))
 
@@ -389,5 +393,5 @@
 
 ;; apply primitive procedure
 (define (apply-primitive-procedure proc args)
-  (apply-me (primitive-implemention proc)
+  (apply (primitive-implemention proc)
             args))
